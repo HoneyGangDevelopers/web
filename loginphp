@@ -1,0 +1,52 @@
+<html>
+<head>
+	<title>FUCK</title>
+	<style type="text/css">
+		table
+		{
+			;
+			border-color: red;
+		}
+		td
+		{
+			border-style: dotted;
+			background-color: blue;
+		}
+	</style>
+</head>
+<body>
+<?php
+
+$sqlconn=mysqli_connect("localhost","root","","tomiphp") or die("Nem műkszik!".mysqli_error());
+
+$sql="SELECT * FROM login";
+$cucc=mysqli_query($sqlconn, $sql);
+
+echo "<table align='center' border='1'>
+<tr>
+<th>IDK</th>
+<th>NEVEK</th>
+<th>PASSWORD</th>
+</tr>";
+
+while ($row = mysqli_fetch_row($cucc)) {
+    
+	echo "<tr>";
+	echo "<td>" . $row[0] . "</td>";
+	echo "<td>" . $row[1] . "</td>";
+	echo "<td>" . $row[2] . "</td>";
+	echo "</tr>";
+
+
+
+
+
+
+    //echo "ID: {$row[0]}\t";
+    //echo "NEV: {$row[1]}\t";
+    //echo "PASS: {$row[2]}\t";
+}
+echo "</table>";
+?>
+</body>
+</html>
