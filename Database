@@ -1,0 +1,93 @@
+<html>
+<head>
+	<title>Instertes téma</title>
+	<meta charset="utf-8">
+	<style>
+	#feltoltes
+	{
+		background-color: red;
+		width: 600px;
+		height: 100px;
+		margin: auto;
+		font-size: 20px;
+		padding-top: 45px;
+	}
+	#lekerdez
+	{
+		width: 1000px;
+		text-align: center;
+		margin: auto;
+		margin-bottom: 100px;
+	}
+
+	</style>
+</head>
+<body>
+<div id="lekerdez" align="center">
+<table border="2" width="100%">
+	
+		<tr>
+		    <th>ID</th>
+		    <th>First name</th>
+		    <th>Last name</th>
+		    <th>DELETE</th>
+		 </tr>
+<?php
+$con = mysqli_connect("localhost","root","","proba");       ---------------------------lekérdezés--------------------------
+$sql = "Select id, f_name, l_name from probatabla";
+
+$result=mysqli_query($con,$sql);
+
+while ($row=mysqli_fetch_array($result)) {
+$id=$row['id'];
+$fnev=$row['f_name'];
+$lnev=$row['l_name'];
+
+print('<tr>
+		<td>'.$id.'</td>
+		<td>'.$fnev.'</td>
+		<td>'.$lnev.'</td>
+	</tr>');
+}
+?>
+
+</table>
+</div>
+<div id="feltoltes" align="center">
+<form action="feltolt.php" method="POST">
+First Name:	<input type="text" name="fname">
+Last Name:	<input type="text" name="lname">
+<input type="submit" name="gomb" value="Hozzáad">
+</form>
+</div>
+</body>
+</html>
+
+------------------------------------------feltöltés--------------------------------------------
+
+<?php
+$con = mysqli_connect("localhost","root","","proba");
+if (!$con) 
+{
+	echo "Not connected to the server";	
+}
+if (isset ($_POST["gomb"])) 
+{
+$firstname=$_POST['fname'];
+$lastname=$_POST['lname'];
+
+$sql="INSERT INTO probatabla (f_name,l_name) VALUES ('$firstname','$lastname');";
+$csinald=mysqli_query($con,$sql);
+
+	if (!$csinald)
+	{
+		echo "Hozzáadással hiba történt!";
+	}else
+	{
+		echo "Hozzáadva!";
+	}
+
+}
+
+header("refresh:2; url=proba.php");
+?> 
