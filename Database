@@ -103,3 +103,42 @@ $csinald=mysqli_query($con,$sql);
 
 header("refresh:2; url=proba.php");
 ?> 
+
+
+----------------------sql.php-----------------------------
+<?php
+if (isset($_REQUEST['admin'])) {
+
+	$servername = "localhost";
+	$username = "root";
+	$password = "";
+	$database = "edata";
+	$con = mysqli_connect($servername, $username, $password, $database);
+	$sql = "Select admin_id, admin_neve, felhasznalonev, jelszo from admin";
+	$result = mysqli_query($con, $sql);
+	
+	$sz=4;
+			include 'aprof.php';
+			print('<table>');
+			for($i=0; $i<$sz; $i++)
+			{
+			$row = mysqli_fetch_array($result);
+			$id[]=$row["admin_id"];
+			$nev[]=$row["admin_neve"];
+			$fnev[]=$row["felhasznalonev"];
+			$pw[]=$row["jelszo"];
+
+			print('
+				<tr>
+					<td>'.$id[$i].'</td>
+					<td>'.$nev[$i].'</td>
+					<td>'.$fnev[$i].'</td>
+					<td>'.$pw[$i].'</td>
+				</tr>
+				');	
+			}
+			print('</table>');
+			
+	mysqli_close($con);
+}
+?>
