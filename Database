@@ -24,7 +24,7 @@
 </head>
 <body>
 <div id="lekerdez" align="center">
-<table border="2" width="100%">
+<table id="tablazat" border="2" width="100%">
 	
 		<tr>
 		    <th>ID</th>
@@ -33,24 +33,37 @@
 		    <th>DELETE</th>
 		 </tr>
 <?php
-$con = mysqli_connect("localhost","root","","proba");       ---------------------------lekérdezés--------------------------
+$con = mysqli_connect("localhost","root","","proba");
 $sql = "Select id, f_name, l_name from probatabla";
-
 $result=mysqli_query($con,$sql);
 
-while ($row=mysqli_fetch_array($result)) {
+while ($row=mysqli_fetch_array($result, MYSQLI_ASSOC)) {
 $id=$row['id'];
 $fnev=$row['f_name'];
 $lnev=$row['l_name'];
-
-print('<tr>
-		<td>'.$id.'</td>
-		<td>'.$fnev.'</td>
-		<td>'.$lnev.'</td>
-	</tr>');
-}
 ?>
+<tr align="center">
+		<td><?php echo $id; ?> </td>
+		<td><?php echo $fnev; ?> </td>
+		<td><?php echo $lnev; ?> </td>
+		<td><button onclick="window.location.href='proba.php?delete=<?php echo $id?>'">DELETE</button></td>
+</tr>
+<?php
+}
+if(isset($_GET['delete'])){
+	$delete_ID = $_GET['delete'];
+	$delet= "DELETE FROM probatabla WHERE id='$delete_ID'";
+	$torol=mysqli_query($con,$delet);
+if (!$torol) {
+	echo "Nem sikerült törölni!";
+} else
+	{
+		echo "Sikeres Törlés!";
+	}
+	header("refresh:2; url=proba.php");
+}
 
+?>
 </table>
 </div>
 <div id="feltoltes" align="center">
@@ -62,7 +75,6 @@ Last Name:	<input type="text" name="lname">
 </div>
 </body>
 </html>
-
 ------------------------------------------feltöltés------------------------------------------------
 
 <?php
@@ -91,24 +103,3 @@ $csinald=mysqli_query($con,$sql);
 
 header("refresh:2; url=proba.php");
 ?> 
-
----------------------------------------------------------delete.php-------------------------------------------------------------
-
-<?php
-$con = mysqli_connect("localhost","root","","proba");
-
-if (!$con) 
-{
-	echo "Not connected to the server";	
-}
-if (isset($_POST['deletegomb'])) 
-{
-$delete = "DELETE FROM probatabla WHERE id=$row['id']";
-	if(mysqli_query($con,$delete)){
-		header("refresh:3; url=proba.php");
-	}else
-	{ echo "NEM sikerült kitörölni"; }
-}
-
-
-?>
