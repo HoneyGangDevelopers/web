@@ -91,3 +91,24 @@ $csinald=mysqli_query($con,$sql);
 
 header("refresh:2; url=proba.php");
 ?> 
+
+---------------------------------------------------------delete.php-------------------------------------------------------------
+
+<?php
+$con = mysqli_connect("localhost","root","","proba");
+
+if (!$con) 
+{
+	echo "Not connected to the server";	
+}
+if (isset($_POST['deletegomb'])) 
+{
+$delete = "DELETE FROM probatabla WHERE id=$row['id']";
+	if(mysqli_query($con,$delete)){
+		header("refresh:3; url=proba.php");
+	}else
+	{ echo "NEM sikerült kitörölni"; }
+}
+
+
+?>
