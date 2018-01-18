@@ -1,0 +1,165 @@
+<html>
+<head>
+	<title>Instertes téma</title>
+	<meta charset="utf-8">
+	<style>
+	#feltoltes
+	{
+		background-color: red;
+		width: 600px;
+		height: 100px;
+		margin: auto;
+		font-size: 20px;
+		padding-top: 45px;
+	}
+	#update
+	{
+		background-color: blue;
+		width: 1000px;
+		height: 100px;
+		margin: auto;
+		font-size: 20px;
+		padding-top: 45px;
+	}
+	#torles
+	{
+		background-color: green;
+		width: 200px;
+		height: 100px;
+		margin: auto;
+		font-size: 20px;
+		padding-top: 45px;
+	}
+	#lekerdez
+	{
+		width: 1000px;
+		text-align: center;
+		margin: auto;
+		margin-bottom: 100px;
+	}
+
+	</style>
+</head>
+<body>
+<div id="lekerdez" align="center">
+<table id="tablazat" border="2" width="100%">
+	
+		<tr>
+		    <th>ID</th>
+		    <th>First name</th>
+		    <th>Last name</th>
+		    <th>DELETE</th>
+		 </tr>
+<?php
+$con = mysqli_connect("localhost","root","","proba");
+$sql = "Select id, f_name, l_name from probatabla";
+$result=mysqli_query($con,$sql);
+
+while ($row=mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+$id=$row['id'];
+$fnev=$row['f_name'];
+$lnev=$row['l_name'];
+?>
+
+<tr align="center">
+	<td><?php echo $id; ?> </td>
+	<td><?php echo $fnev; ?> </td>
+	<td><?php echo $lnev; ?> </td>
+	<td><button onclick="window.location.href='proba.php?delete=<?php echo $id?>'">DELETE</button></td>
+</tr>
+<?php
+}
+if(isset($_GET['delete'])){    //------------------------delete
+	$delete_ID = $_GET['delete'];
+	$delet= "DELETE FROM probatabla WHERE id='$delete_ID'";
+	$torol=mysqli_query($con,$delet);
+if (!$torol) {
+	echo "Nem sikerült törölni!";
+} else
+	{
+		echo "Sikeres Törlés!";
+	}
+	header("refresh:2; url=proba.php");
+}
+?>
+</table>
+</div>
+<div id="feltoltes" align="center">
+<form action="feltolt.php" method="POST">
+First Name:	<input type="text" name="fname">
+Last Name:	<input type="text" name="lname">
+<input type="submit" name="gomb" value="INSERT">
+</form>
+</div>
+
+<div id="update" align="center">
+<form action="edit.php" method="POST">
+ID: <input type="text" name="editid">
+First Name:	<input type="text" name="editfname">
+Last Name:	<input type="text" name="editlname">
+<input type="submit" name="editgomb" value="EDIT">
+</form>
+</div>
+
+<div id="torles" align="center">
+	<form method="POST" action="delete.php">
+	ID: <input type="text" name="torolid">
+	<input type="submit" name="torolgomb" value="TÖRLÉS">
+	</form>
+</div>
+
+</body>
+</html>
+------------------------------------------------delete.php-----------------------------------------------
+<?php
+$con = mysqli_connect("localhost","root","","proba");
+
+if (!$con) 
+{
+	echo "Not connected to the server";	
+}
+$torol_ID=$_POST['torolid'];
+
+if (isset($_POST['torolgomb'])) 
+{
+
+	$delete = "DELETE FROM probatabla WHERE id='$torol_ID'";
+	
+	if(mysqli_query($con,$delete)){
+	
+	echo "SIKERES TÖRLÉS!";
+	header("refresh:3; url=proba.php");
+	
+	}
+	else
+	{ echo "NEM sikerült kitörölni"; }
+}
+?>
+---------------------------------------------------edit.php-----------------------------------------------
+
+<?php
+			$con = mysqli_connect("localhost","root","","proba");
+		
+			if (!$con) 
+			{
+				echo "Not connected to the server";	
+			}
+
+$fnevecske=$_POST['editfname'];
+$lnevecske=$_POST['editlname']; 
+$idcske=$_POST['editid'];
+
+if(isset($_POST['editgomb'])){   //---------------------------edit
+	
+	$edit= "UPDATE probatabla SET `f_name`='$fnevecske',`l_name`='$lnevecske' WHERE id='$idcske'";
+
+	$editeles=mysqli_query($con,$edit);
+if (!$editeles) {
+	echo "Nem sikerült frissíteni!";
+} else
+	{
+		echo "Sikeres frissítés";
+	}
+	header("refresh:4; url=proba.php");
+}
+?>
