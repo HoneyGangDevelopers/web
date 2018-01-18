@@ -1,0 +1,151 @@
+--------------------------proba.php-----------------------------------
+<html>
+<head>
+	<title>Instertes téma</title>
+	<meta charset="utf-8">
+	<style>
+	#feltoltes
+	{
+		background-color: red;
+		width: 600px;
+		height: 100px;
+		margin: auto;
+		font-size: 20px;
+		padding-top: 45px;
+	}
+	#lekerdez
+	{
+		width: 1000px;
+		text-align: center;
+		margin: auto;
+		margin-bottom: 100px;
+	}
+	#hide {
+		width: 0px;
+		padding: 0px;
+		margin: 0px;
+		border: 0px solid black;
+	}
+	</style>
+</head>
+<body>
+<div id="lekerdez" align="center">
+<table id="tablazat" border="2" width="100%">
+		<tr>
+			<th colspan="6">Új rekord felvétele</th>
+		</tr>
+		<tr>
+			<form action="feltolt.php" method="POST">
+			<td colspan="2"><input type="text" name="fname" placeholder="Firstname"></td>
+			<td colspan="2"><input type="text" name="lname" placeholder="Lastname"></td>
+			<td colspan="2"><input type="submit" name="gomb" value="Hozzáad"></td>
+			</form>
+		</tr>
+		<tr>
+		    <th>ID</th>
+		    <th>First name</th>
+		    <th>Last name</th>
+		    <th>Edit</th>
+		    <th id="hide"></th>
+		    <th>Delete</th>
+		 </tr>
+<?php
+$con = mysqli_connect("localhost","root","","proba");
+$sql = "Select id, f_name, l_name from probatabla";
+$result=mysqli_query($con,$sql);
+
+while ($row=mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+$id=$row['id'];
+$fnev=$row['f_name'];
+$lnev=$row['l_name'];
+?>
+<tr align="center">
+		<td><?php echo $id; ?></td>
+		<form method="POST" action="edit.php">
+		<td><input type="text" name="gfnev" value="<?php echo $fnev; ?>"></td>
+		<td><input type="text" name="glnev" value="<?php echo $lnev; ?>"></td>
+		<td><input type="submit" name="edit" value="Edit"></td>
+		<td id="hide"><input type="hidden" name="editke" value="<?php echo $id?>"></td>
+		</form>
+		<td><button onclick="window.location.href='delete.php?delete=<?php echo $id?>'">DELETE</button></td>
+		
+	
+</tr>
+<?php
+}
+?>
+</table>
+</div>
+
+</body>
+</html>
+
+----------------------------edit.php-------------------------------------------------
+<?php
+$con = mysqli_connect("localhost","root","","proba");
+if (isset($_POST['edit'])) {
+
+	$asd1=$_POST['gfnev'];
+	$asd2=$_POST['glnev'];
+
+	$edit_id=$_POST['editke'];
+	$edit = "UPDATE probatabla SET f_name='$asd1', l_name='$asd2' WHERE id='$edit_id'";
+	$editing=mysqli_query($con, $edit);
+
+	if (!$editing) {
+		print("Nem sikerült szerkeszteni".mysqli_error($con));
+		header("refresh:5; url=aprof.php");
+	}
+	else {
+		print("Sikeres szerkesztés");
+		header("refresh:2; url=aprof.php");
+	}
+}
+?>
+
+-----------------------------delete.php-------------------------------------------------
+<?php
+$con = mysqli_connect("localhost","root","","proba");
+if(isset($_GET['delete'])){
+	$delete_ID = $_GET['delete'];
+	$delet= "DELETE FROM probatabla WHERE id='$delete_ID'";
+	$torol=mysqli_query($con,$delet);
+if (!$torol) {
+	echo "Nem sikerült törölni!";
+} else
+	{
+		echo "Sikeres Törlés!";
+	}
+	header("refresh:2; url=aprof.php");
+}
+
+
+?>
+
+--------------------------------feltolt.php-----------------------------------------------
+<?php
+$con = mysqli_connect("localhost","root","","proba");
+if (!$con) 
+{
+	echo "Not connected to the server";	
+}
+if (isset ($_POST["gomb"])) 
+{
+$firstname=$_POST['fname'];
+$lastname=$_POST['lname'];
+
+$sql="INSERT INTO probatabla (f_name,l_name) VALUES ('$firstname','$lastname');";
+$csinald=mysqli_query($con,$sql);
+
+	if (!$csinald)
+	{
+		echo "Hozzáadással hiba történt!";
+	}else
+	{
+		echo "Hozzáadva!";
+	}
+
+}
+
+header("refresh:2; url=aprof.php");
+?> 
